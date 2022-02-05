@@ -1,23 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect } from "react";
+import { Search, UserDataForm } from "./components";
+import "./App.css";
 
 function App() {
+  useEffect(() => {
+    const authToken = JSON.parse(localStorage.getItem("token"));
+    if (!authToken) {
+      fetch("http://3.108.225.220:5000/api/user-access-token")
+        .then((response) => response.json())
+        .then((responseJson) => {
+          console.log(responseJson);
+          localStorage.setItem("token", JSON.stringify(responseJson.token));
+        });
+    }
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Search />
+      <UserDataForm />
     </div>
   );
 }
